@@ -105,7 +105,12 @@ export async function POST(req: Request) {
               ...messages,
               {
                 role: 'assistant',
-                content: `Found ${data.count} real quote(s):\n\n${quotesText}`,
+                content: [
+                  {
+                    type: 'text',
+                    text: `Found ${data.count} real quote(s):\n\n${quotesText}`,
+                  },
+                ],
               },
             ]),
             system: 'You are presenting real quotes found from a database. Display them exactly as provided.',
@@ -126,8 +131,12 @@ export async function POST(req: Request) {
               ...messages,
               {
                 role: 'assistant',
-                content:
-                  'No exact quote found. Enable AI quote generation to craft an original line for this occasion.',
+                content: [
+                  {
+                    type: 'text',
+                    text: 'No exact quote found. Enable AI quote generation to craft an original line for this occasion.',
+                  },
+                ],
               },
             ]),
           });
