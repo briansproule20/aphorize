@@ -159,17 +159,17 @@ export default function PosterBuilderPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-7xl p-6">
-      <div className="mb-6">
-        <h1 className="font-bold text-3xl">Poster Builder</h1>
-        <p className="text-muted-foreground">Create beautiful quote posters with custom styling</p>
+    <div className="container mx-auto max-w-7xl p-4 md:p-6">
+      <div className="mb-4 md:mb-6">
+        <h1 className="font-bold text-2xl md:text-3xl">Poster Builder</h1>
+        <p className="text-muted-foreground text-sm md:text-base">Create beautiful quote posters with custom styling</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
         {/* Left Panel - Settings */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Quote Text */}
-          <div className="space-y-4 rounded-lg border p-4">
+          <div className="space-y-4 rounded-lg border p-3 md:p-4">
             <h2 className="font-semibold text-lg">Quote Content</h2>
             <div className="space-y-2">
               <Label htmlFor="quote-text">Quote Text</Label>
@@ -193,9 +193,9 @@ export default function PosterBuilderPage() {
           </div>
 
           {/* Typography */}
-          <div className="space-y-4 rounded-lg border p-4">
-            <h2 className="font-semibold text-lg">Typography</h2>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4 rounded-lg border p-3 md:p-4">
+            <h2 className="font-semibold text-base md:text-lg">Typography</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="font-family">Font Family</Label>
                 <Select
@@ -234,7 +234,7 @@ export default function PosterBuilderPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="font-size">Font Size: {settings.fontSize}px</Label>
                 <Input
@@ -264,7 +264,7 @@ export default function PosterBuilderPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="text-align">Text Align</Label>
                 <Select
@@ -369,9 +369,9 @@ export default function PosterBuilderPage() {
         </div>
 
         {/* Right Panel - Preview */}
-        <div className="space-y-4">
-          <div className="rounded-lg border p-4">
-            <h2 className="mb-4 font-semibold text-lg">Preview</h2>
+        <div className="order-first space-y-4 lg:order-last">
+          <div className="rounded-lg border p-3 md:p-4">
+            <h2 className="mb-3 font-semibold text-base md:mb-4 md:text-lg">Preview</h2>
             <PosterCanvas settings={settings} attribution={attribution} />
             {!settings.quoteText && (
               <p className="mt-4 text-center text-muted-foreground text-sm">
@@ -391,10 +391,10 @@ export default function PosterBuilderPage() {
       </div>
 
       {/* Background Options - Bottom Section */}
-      <div className="mt-8">
-        <div className="mb-4">
-          <h2 className="font-semibold text-2xl">Background</h2>
-          <p className="text-muted-foreground text-sm">Choose how you want to style your poster background</p>
+      <div className="mt-6 md:mt-8">
+        <div className="mb-3 md:mb-4">
+          <h2 className="font-semibold text-xl md:text-2xl">Background</h2>
+          <p className="text-muted-foreground text-xs md:text-sm">Choose how you want to style your poster background</p>
         </div>
 
         <Tabs value={backgroundSource} onValueChange={(v) => setBackgroundSource(v as any)} className="w-full">
@@ -414,7 +414,7 @@ export default function PosterBuilderPage() {
           </TabsList>
 
           <TabsContent value="ai" className="space-y-4">
-            <div className="rounded-lg border bg-card p-6 space-y-4">
+            <div className="rounded-lg border bg-card p-4 space-y-4 md:p-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Wand2 className="h-5 w-5 text-primary" />
@@ -458,7 +458,7 @@ export default function PosterBuilderPage() {
           </TabsContent>
 
           <TabsContent value="color" className="space-y-4">
-            <div className="rounded-lg border bg-card p-6 space-y-6">
+            <div className="rounded-lg border bg-card p-4 space-y-6 md:p-6">
               <div className="space-y-3">
                 <Label htmlFor="bg-color">Primary Color</Label>
                 <div className="flex items-center gap-4">
@@ -528,7 +528,7 @@ export default function PosterBuilderPage() {
           </TabsContent>
 
           <TabsContent value="upload" className="space-y-4">
-            <div className="rounded-lg border bg-card p-6 space-y-4">
+            <div className="rounded-lg border bg-card p-4 space-y-4 md:p-6">
               <div className="space-y-2">
                 <Label htmlFor="file-upload">Image File</Label>
                 <p className="text-muted-foreground text-sm">

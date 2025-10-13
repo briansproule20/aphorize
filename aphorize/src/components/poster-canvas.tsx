@@ -283,7 +283,7 @@ export default function PosterCanvas({
           ref={canvasRef}
           width={width}
           height={height}
-          className="mx-auto max-h-[600px] w-auto"
+          className="mx-auto w-full max-w-full md:max-h-[600px] md:w-auto"
         />
         {isRendering && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
