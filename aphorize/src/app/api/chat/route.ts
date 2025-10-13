@@ -104,7 +104,6 @@ export async function POST(req: Request) {
             messages: convertToModelMessages([
               ...messages,
               {
-                id: crypto.randomUUID(),
                 role: 'assistant',
                 content: `Found ${data.count} real quote(s):\n\n${quotesText}`,
               },
@@ -126,7 +125,6 @@ export async function POST(req: Request) {
             messages: convertToModelMessages([
               ...messages,
               {
-                id: crypto.randomUUID(),
                 role: 'assistant',
                 content:
                   'No exact quote found. Enable AI quote generation to craft an original line for this occasion.',
