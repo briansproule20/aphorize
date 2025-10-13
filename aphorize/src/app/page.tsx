@@ -124,7 +124,7 @@ export default async function Home() {
           {/* Secondary CTA */}
           <div className="pt-6 sm:pt-8">
             <p className="text-muted-foreground text-xs sm:text-sm">
-              Powered by Merit System's Echo and Vercel
+              Powered by Merit System&apos;s Echo and Vercel
             </p>
           </div>
         </div>
