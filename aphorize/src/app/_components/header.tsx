@@ -8,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Menu, MessageSquare, Image as ImageIcon } from 'lucide-react';
+import { Menu, MessageSquare, Image as ImageIcon, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,6 +24,7 @@ const Header: FC<HeaderProps> = ({ title = 'Aphorize', className = '' }) => {
   const pathname = usePathname();
 
   const navItems = [
+    { href: '/', label: 'Home', icon: Home },
     { href: '/find', label: 'Find Quote', icon: MessageSquare },
     { href: '/generate', label: 'Generate Quote', icon: MessageSquare },
     { href: '/poster', label: 'Poster Builder', icon: ImageIcon },
@@ -33,7 +34,7 @@ const Header: FC<HeaderProps> = ({ title = 'Aphorize', className = '' }) => {
     <header className={`border-border border-b bg-background ${className}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Image
               src="/aphorize-favicon.png"
               alt="aphorize logo"
@@ -41,12 +42,10 @@ const Header: FC<HeaderProps> = ({ title = 'Aphorize', className = '' }) => {
               height={32}
               className="h-8 w-8"
             />
-            <Link href="/">
-              <h1 className="font-semibold text-foreground text-xl hover:text-primary transition-colors">
-                {title}
-              </h1>
-            </Link>
-          </div>
+            <h1 className="font-semibold text-foreground text-xl">
+              {title}
+            </h1>
+          </Link>
 
           <nav className="flex items-center gap-4">
             <EchoAccount />
