@@ -11,8 +11,11 @@ export interface PosterSettings {
   fontSize: number;
   fontWeight: string;
   textAlign: 'left' | 'center' | 'right';
+  verticalPosition?: number;
+  horizontalPosition?: number;
   lineHeight: number;
   padding: number;
+  maxWidth?: number;
   textColor: string;
   textShadow: boolean;
   textStroke: boolean;
@@ -42,17 +45,13 @@ export default function PosterCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isRendering, setIsRendering] = useState(false);
 
-  const wrapText = (
+  const calculateLines = (
     ctx: CanvasRenderingContext2D,
     text: string,
-    x: number,
-    y: number,
-    maxWidth: number,
-    lineHeight: number
-  ): number => {
+    maxWidth: number
+  ): string[] => {
     const words = text.split(' ');
     let line = '';
-    let currentY = y;
     const lines: string[] = [];
 
     for (let n = 0; n < words.length; n++) {
@@ -68,8 +67,17 @@ export default function PosterCanvas({
       }
     }
     lines.push(line.trim());
+    return lines;
+  };
 
-    // Draw lines
+  const drawLines = (
+    ctx: CanvasRenderingContext2D,
+    lines: string[],
+    x: number,
+    startY: number,
+    lineHeight: number
+  ): number => {
+    let currentY = startY;
     lines.forEach((lineText) => {
       ctx.fillText(lineText, x, currentY);
       if (settings.textStroke) {
@@ -77,7 +85,6 @@ export default function PosterCanvas({
       }
       currentY += lineHeight;
     });
-
     return currentY;
   };
 
@@ -195,15 +202,18 @@ export default function PosterCanvas({
       ctx.lineWidth = 2;
     }
 
-    // Calculate text position
-    let textX = settings.padding;
+    // Calculate text position with horizontal offset
+    const horizontalOffset = settings.horizontalPosition ?? 0;
+    let textX = settings.padding + horizontalOffset;
     if (settings.textAlign === 'center') {
-      textX = width / 2;
+      textX = width / 2 + horizontalOffset;
     } else if (settings.textAlign === 'right') {
-      textX = width - settings.padding;
+      textX = width - settings.padding + horizontalOffset;
     }
 
-    const maxWidth = width - settings.padding * 2;
+    const maxWidth = settings.maxWidth 
+      ? Math.min(settings.maxWidth, width - settings.padding * 2)
+      : width - settings.padding * 2;
     const lineHeight = settings.fontSize * settings.lineHeight;
 
     // Draw quote text with optional quotation marks
@@ -211,25 +221,46 @@ export default function PosterCanvas({
       ? `"${settings.quoteText}"`
       : settings.quoteText;
     
-    const quoteEndY = wrapText(
-      ctx,
-      quoteText,
-      textX,
-      settings.padding + height * 0.2,
-      maxWidth,
-      lineHeight
-    );
-
-    // Draw author with optional em dash
+    // Calculate lines for quote
+    const quoteLines = calculateLines(ctx, quoteText, maxWidth);
+    
+    // Calculate author lines if present
+    let authorLines: string[] = [];
+    let authorLineHeight = 0;
     if (settings.author) {
       const authorFontStack = settings.fontFamily.includes(',') 
         ? settings.fontFamily 
         : `${settings.fontFamily}, serif`;
       ctx.font = `${settings.fontWeight} ${settings.fontSize * 0.7}px ${authorFontStack}`;
+      authorLineHeight = settings.fontSize * 0.7 * settings.lineHeight;
       const authorText = settings.showPunctuation !== false 
         ? `— ${settings.author}`
         : settings.author;
-      ctx.fillText(authorText, textX, quoteEndY + lineHeight * 0.5);
+      authorLines = calculateLines(ctx, authorText, maxWidth);
+    }
+
+    // Reset font for quote
+    ctx.font = `${settings.fontWeight} ${settings.fontSize}px ${fontStack}`;
+
+    // Calculate total text height
+    const quoteHeight = quoteLines.length * lineHeight;
+    const authorHeight = authorLines.length > 0 ? authorLineHeight * authorLines.length + lineHeight * 0.5 : 0;
+    const totalTextHeight = quoteHeight + authorHeight;
+
+    // Calculate vertical position with offset
+    const verticalOffset = settings.verticalPosition ?? 0;
+    let startY = (height - totalTextHeight) / 2 + verticalOffset;
+
+    // Draw quote lines
+    const quoteEndY = drawLines(ctx, quoteLines, textX, startY, lineHeight);
+
+    // Draw author with optional em dash
+    if (settings.author && authorLines.length > 0) {
+      const authorFontStack = settings.fontFamily.includes(',') 
+        ? settings.fontFamily 
+        : `${settings.fontFamily}, serif`;
+      ctx.font = `${settings.fontWeight} ${settings.fontSize * 0.7}px ${authorFontStack}`;
+      drawLines(ctx, authorLines, textX, quoteEndY + lineHeight * 0.5, authorLineHeight);
     }
 
     // Draw watermark

@@ -61,8 +61,11 @@ export default function PosterBuilderPage() {
     fontSize: 48,
     fontWeight: '700',
     textAlign: 'center',
+    verticalPosition: 0,
+    horizontalPosition: 0,
     lineHeight: 1.4,
     padding: 80,
+    maxWidth: 900,
     textColor: '#FFFFFF',
     textShadow: true,
     textStroke: false,
@@ -84,6 +87,9 @@ export default function PosterBuilderPage() {
   // Collapsible state
   const [quoteOpen, setQuoteOpen] = useState(true);
   const [typographyOpen, setTypographyOpen] = useState(true);
+  const [fontSettingsOpen, setFontSettingsOpen] = useState(true);
+  const [positionOpen, setPositionOpen] = useState(true);
+  const [stylingOpen, setStylingOpen] = useState(true);
 
   // Load pending quote from localStorage
   useEffect(() => {
@@ -218,176 +224,258 @@ export default function PosterBuilderPage() {
                 <ChevronDown className={`h-5 w-5 transition-transform ${typographyOpen ? 'rotate-180' : ''}`} />
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className="space-y-4 border-t p-3 md:p-4">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="font-family">Font Family</Label>
-                      <Select
-                  value={settings.fontFamily}
-                  onValueChange={(value) => setSettings((prev) => ({ ...prev, fontFamily: value }))}
-                      >
-                        <SelectTrigger id="font-family">
-                          <SelectValue placeholder="Select a font" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {fontFamilies.map((font) => (
-                            <SelectItem key={font.value} value={font.value}>
-                              {font.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="font-weight">Font Weight</Label>
-                      <Select
-                  value={settings.fontWeight}
-                  onValueChange={(value) => setSettings((prev) => ({ ...prev, fontWeight: value }))}
-                      >
-                        <SelectTrigger id="font-weight">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {fontWeights.map((weight) => (
-                            <SelectItem key={weight.value} value={weight.value}>
-                              {weight.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+                <div className="space-y-3 border-t p-3 md:p-4">
+                  
+                  {/* Font Settings */}
+                  <Collapsible open={fontSettingsOpen} onOpenChange={setFontSettingsOpen}>
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 hover:bg-muted/50 transition-colors">
+                      <h3 className="font-medium text-sm">Font Settings</h3>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${fontSettingsOpen ? 'rotate-180' : ''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="space-y-4 pt-3">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="font-family">Font Family</Label>
+                            <Select
+                              value={settings.fontFamily}
+                              onValueChange={(value) => setSettings((prev) => ({ ...prev, fontFamily: value }))}
+                            >
+                              <SelectTrigger id="font-family">
+                                <SelectValue placeholder="Select a font" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {fontFamilies.map((font) => (
+                                  <SelectItem key={font.value} value={font.value}>
+                                    {font.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="font-weight">Font Weight</Label>
+                            <Select
+                              value={settings.fontWeight}
+                              onValueChange={(value) => setSettings((prev) => ({ ...prev, fontWeight: value }))}
+                            >
+                              <SelectTrigger id="font-weight">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {fontWeights.map((weight) => (
+                                  <SelectItem key={weight.value} value={weight.value}>
+                                    {weight.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="font-size">Font Size: {settings.fontSize}px</Label>
-                      <Input
-                  id="font-size"
-                  type="range"
-                  min="24"
-                  max="120"
-                  value={settings.fontSize}
-                  onChange={(e) =>
-                          setSettings((prev) => ({ ...prev, fontSize: Number(e.target.value) }))
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="line-height">Line Height: {settings.lineHeight.toFixed(1)}</Label>
-                      <Input
-                  id="line-height"
-                  type="range"
-                  min="1"
-                  max="2"
-                  step="0.1"
-                  value={settings.lineHeight}
-                  onChange={(e) =>
-                          setSettings((prev) => ({ ...prev, lineHeight: Number(e.target.value) }))
-                        }
-                      />
-                    </div>
-                  </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="font-size">Font Size: {settings.fontSize}px</Label>
+                            <Input
+                              id="font-size"
+                              type="range"
+                              min="24"
+                              max="120"
+                              value={settings.fontSize}
+                              onChange={(e) =>
+                                setSettings((prev) => ({ ...prev, fontSize: Number(e.target.value) }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="line-height">Line Height: {settings.lineHeight.toFixed(1)}</Label>
+                            <Input
+                              id="line-height"
+                              type="range"
+                              min="1"
+                              max="2"
+                              step="0.1"
+                              value={settings.lineHeight}
+                              onChange={(e) =>
+                                setSettings((prev) => ({ ...prev, lineHeight: Number(e.target.value) }))
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="text-align">Text Align</Label>
-                      <Select
-                  value={settings.textAlign}
-                  onValueChange={(value: 'left' | 'center' | 'right') =>
-                          setSettings((prev) => ({ ...prev, textAlign: value }))
-                        }
-                      >
-                        <SelectTrigger id="text-align">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {textAligns.map((align) => (
-                            <SelectItem key={align.value} value={align.value}>
-                              {align.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="text-color">Text Color</Label>
-                      <Input
-                  id="text-color"
-                  type="color"
-                  value={settings.textColor}
-                  onChange={(e) => setSettings((prev) => ({ ...prev, textColor: e.target.value }))}
-                      />
-                    </div>
-                  </div>
+                  {/* Position */}
+                  <Collapsible open={positionOpen} onOpenChange={setPositionOpen}>
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 hover:bg-muted/50 transition-colors">
+                      <h3 className="font-medium text-sm">Position</h3>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${positionOpen ? 'rotate-180' : ''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="space-y-4 pt-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground text-xs">Adjust text placement</span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              setSettings((prev) => ({
+                                ...prev,
+                                verticalPosition: 0,
+                                horizontalPosition: 0,
+                              }))
+                            }
+                          >
+                            Reset
+                          </Button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="vertical-position">Vertical: {settings.verticalPosition}px</Label>
+                            <Input
+                              id="vertical-position"
+                              type="range"
+                              min="-400"
+                              max="400"
+                              value={settings.verticalPosition}
+                              onChange={(e) =>
+                                setSettings((prev) => ({ ...prev, verticalPosition: Number(e.target.value) }))
+                              }
+                            />
+                            <p className="text-muted-foreground text-xs">Negative = up, Positive = down</p>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="horizontal-position">Horizontal: {settings.horizontalPosition}px</Label>
+                            <Input
+                              id="horizontal-position"
+                              type="range"
+                              min="-400"
+                              max="400"
+                              value={settings.horizontalPosition}
+                              onChange={(e) =>
+                                setSettings((prev) => ({ ...prev, horizontalPosition: Number(e.target.value) }))
+                              }
+                            />
+                            <p className="text-muted-foreground text-xs">Negative = left, Positive = right</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="padding">Padding: {settings.padding}px</Label>
-                    <Input
-                id="padding"
-                type="range"
-                min="20"
-                max="200"
-                value={settings.padding}
-                onChange={(e) =>
-                      setSettings((prev) => ({ ...prev, padding: Number(e.target.value) }))
-                    }
-                    />
-                  </div>
+                  {/* Styling & Display */}
+                  <Collapsible open={stylingOpen} onOpenChange={setStylingOpen}>
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 hover:bg-muted/50 transition-colors">
+                      <h3 className="font-medium text-sm">Styling & Display</h3>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${stylingOpen ? 'rotate-180' : ''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="space-y-4 pt-3">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="text-align">Text Align</Label>
+                            <Select
+                              value={settings.textAlign}
+                              onValueChange={(value: 'left' | 'center' | 'right') =>
+                                setSettings((prev) => ({ ...prev, textAlign: value }))
+                              }
+                            >
+                              <SelectTrigger id="text-align">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {textAligns.map((align) => (
+                                  <SelectItem key={align.value} value={align.value}>
+                                    {align.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="text-color">Text Color</Label>
+                            <Input
+                              id="text-color"
+                              type="color"
+                              value={settings.textColor}
+                              onChange={(e) => setSettings((prev) => ({ ...prev, textColor: e.target.value }))}
+                            />
+                          </div>
+                        </div>
 
-                  <Separator />
+                        <div className="space-y-2">
+                          <Label htmlFor="max-width">Max Text Width: {settings.maxWidth}px</Label>
+                          <Input
+                            id="max-width"
+                            type="range"
+                            min="300"
+                            max="1080"
+                            value={settings.maxWidth}
+                            onChange={(e) =>
+                              setSettings((prev) => ({ ...prev, maxWidth: Number(e.target.value) }))
+                            }
+                          />
+                        </div>
 
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="show-quotes">Quotation Marks</Label>
-                      <Switch
-                        id="show-quotes"
-                        checked={settings.showQuotes}
-                        onCheckedChange={(checked) =>
-                          setSettings((prev) => ({ ...prev, showQuotes: checked }))
-                        }
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="show-punctuation">Author Dash</Label>
-                      <Switch
-                        id="show-punctuation"
-                        checked={settings.showPunctuation}
-                        onCheckedChange={(checked) =>
-                          setSettings((prev) => ({ ...prev, showPunctuation: checked }))
-                        }
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="text-shadow">Text Shadow</Label>
-                      <Switch
-                        id="text-shadow"
-                        checked={settings.textShadow}
-                        onCheckedChange={(checked) =>
-                          setSettings((prev) => ({ ...prev, textShadow: checked }))
-                        }
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="text-stroke">Text Stroke</Label>
-                      <Switch
-                        id="text-stroke"
-                        checked={settings.textStroke}
-                        onCheckedChange={(checked) =>
-                          setSettings((prev) => ({ ...prev, textStroke: checked }))
-                        }
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="watermark">Watermark</Label>
-                      <Switch
-                        id="watermark"
-                        checked={settings.watermark}
-                        onCheckedChange={(checked) =>
-                          setSettings((prev) => ({ ...prev, watermark: checked }))
-                        }
-                      />
-                    </div>
-                  </div>
+                        <Separator />
+
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="show-quotes">Quotation Marks</Label>
+                            <Switch
+                              id="show-quotes"
+                              checked={settings.showQuotes}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({ ...prev, showQuotes: checked }))
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="show-punctuation">Author Dash</Label>
+                            <Switch
+                              id="show-punctuation"
+                              checked={settings.showPunctuation}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({ ...prev, showPunctuation: checked }))
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="text-shadow">Text Shadow</Label>
+                            <Switch
+                              id="text-shadow"
+                              checked={settings.textShadow}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({ ...prev, textShadow: checked }))
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="text-stroke">Text Stroke</Label>
+                            <Switch
+                              id="text-stroke"
+                              checked={settings.textStroke}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({ ...prev, textStroke: checked }))
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="watermark">Watermark</Label>
+                            <Switch
+                              id="watermark"
+                              checked={settings.watermark}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({ ...prev, watermark: checked }))
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+
                 </div>
               </CollapsibleContent>
             </div>
