@@ -20,7 +20,7 @@ interface HeaderProps {
   className?: string;
 }
 
-const Header: FC<HeaderProps> = ({ title = 'aphorize', className = '' }) => {
+const Header: FC<HeaderProps> = ({ title = 'Aphorize', className = '' }) => {
   const pathname = usePathname();
 
   const navItems = [
@@ -59,11 +59,14 @@ const Header: FC<HeaderProps> = ({ title = 'aphorize', className = '' }) => {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-64">
-                <SheetHeader>
-                  <SheetTitle>{title}</SheetTitle>
+              <SheetContent side="right" className="w-72 sm:w-80">
+                <SheetHeader className="space-y-3 pb-6">
+                  <SheetTitle className="text-2xl">{title}</SheetTitle>
+                  <p className="text-muted-foreground text-sm">
+                    Create and share memorable quotes
+                  </p>
                 </SheetHeader>
-                <nav className="flex flex-col gap-2 mt-6">
+                <nav className="flex flex-col gap-3 mt-2">
                   {navItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href;
@@ -71,9 +74,10 @@ const Header: FC<HeaderProps> = ({ title = 'aphorize', className = '' }) => {
                       <Link key={item.href} href={item.href}>
                         <Button
                           variant={isActive ? 'default' : 'ghost'}
-                          className="w-full justify-start gap-2"
+                          className="w-full justify-start gap-3 h-12 text-base"
+                          size="lg"
                         >
-                          <Icon className="h-4 w-4" />
+                          <Icon className="h-5 w-5" />
                           {item.label}
                         </Button>
                       </Link>

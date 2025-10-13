@@ -11,7 +11,7 @@ export default async function Home() {
         <div className="w-full max-w-md space-y-8 text-center">
           <div>
             <h2 className="mt-6 font-bold text-3xl tracking-tight">
-              aphorize
+              Aphorize
             </h2>
             <p className="mt-2 text-muted-foreground text-sm">
               Find and create memorable quotes with AI, then turn them into beautiful posters

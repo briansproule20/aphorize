@@ -15,21 +15,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'aphorize',
+  title: 'Aphorize',
   description: 'Find and create memorable quotes with AI, then turn them into beautiful posters',
   icons: {
     icon: '/aphorize-favicon.png',
     apple: '/aphorize-favicon.png',
   },
   openGraph: {
-    title: 'aphorize',
+    title: 'Aphorize',
     description: 'Find and create memorable quotes with AI, then turn them into beautiful posters',
     images: ['/aphorize-favicon.png'],
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'aphorize',
+    title: 'Aphorize',
     description: 'Find and create memorable quotes with AI, then turn them into beautiful posters',
     images: ['/aphorize-favicon.png'],
   },
@@ -46,7 +46,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} flex h-screen flex-col antialiased`}
       >
         <Providers>
-          <Header title="aphorize" />
+          <Header title="Aphorize" />
           <div className="min-h-0 flex-1">{children}</div>
         </Providers>
       </body>

@@ -17,6 +17,8 @@ export interface PosterSettings {
   textShadow: boolean;
   textStroke: boolean;
   watermark: boolean;
+  showQuotes?: boolean;
+  showPunctuation?: boolean;
   imageUrl?: string;
   backgroundColor: string;
 }
@@ -130,13 +132,39 @@ export default function PosterCanvas({
         };
       }).catch((error) => {
         console.error('Failed to load background image:', error);
-        // Continue rendering with solid color instead
-        ctx.fillStyle = settings.backgroundColor;
+        // Continue rendering with fallback color
+        ctx.fillStyle = '#1A1A1A';
         ctx.fillRect(0, 0, width, height);
       });
     } else {
-      // Use solid background color
-      ctx.fillStyle = settings.backgroundColor;
+      // Use solid background color or gradient
+      if (settings.backgroundColor.includes('linear-gradient')) {
+        // Parse gradient string to extract colors
+        const gradientMatch = settings.backgroundColor.match(/linear-gradient\([^,]+,\s*([^)]+)\)/);
+        if (gradientMatch) {
+          const colorStops = gradientMatch[1].split(/,\s*(?![^(]*\))/);
+          
+          // Create linear gradient (diagonal from top-left to bottom-right)
+          const gradient = ctx.createLinearGradient(0, 0, width, height);
+          
+          colorStops.forEach((stop) => {
+            const parts = stop.trim().match(/^(.+?)\s+(\d+)%$/);
+            if (parts) {
+              const color = parts[1].trim();
+              const position = parseInt(parts[2]) / 100;
+              gradient.addColorStop(position, color);
+            }
+          });
+          
+          ctx.fillStyle = gradient;
+        } else {
+          // Fallback to solid color
+          ctx.fillStyle = '#1A1A1A';
+        }
+      } else {
+        // Solid color
+        ctx.fillStyle = settings.backgroundColor;
+      }
       ctx.fillRect(0, 0, width, height);
     }
 
@@ -144,8 +172,11 @@ export default function PosterCanvas({
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.fillRect(0, 0, width, height);
 
-    // Set text properties
-    ctx.font = `${settings.fontWeight} ${settings.fontSize}px ${settings.fontFamily}`;
+    // Set text properties with font fallbacks to ensure quotation marks render properly
+    const fontStack = settings.fontFamily.includes(',') 
+      ? settings.fontFamily 
+      : `${settings.fontFamily}, serif`;
+    ctx.font = `${settings.fontWeight} ${settings.fontSize}px ${fontStack}`;
     ctx.fillStyle = settings.textColor;
     ctx.textAlign = settings.textAlign;
     ctx.textBaseline = 'top';
@@ -175,20 +206,30 @@ export default function PosterCanvas({
     const maxWidth = width - settings.padding * 2;
     const lineHeight = settings.fontSize * settings.lineHeight;
 
-    // Draw quote text
+    // Draw quote text with optional quotation marks
+    const quoteText = settings.showQuotes !== false 
+      ? `"${settings.quoteText}"`
+      : settings.quoteText;
+    
     const quoteEndY = wrapText(
       ctx,
-      `"${settings.quoteText}"`,
+      quoteText,
       textX,
       settings.padding + height * 0.2,
       maxWidth,
       lineHeight
     );
 
-    // Draw author
+    // Draw author with optional em dash
     if (settings.author) {
-      ctx.font = `${settings.fontWeight} ${settings.fontSize * 0.7}px ${settings.fontFamily}`;
-      ctx.fillText(`— ${settings.author}`, textX, quoteEndY + lineHeight * 0.5);
+      const authorFontStack = settings.fontFamily.includes(',') 
+        ? settings.fontFamily 
+        : `${settings.fontFamily}, serif`;
+      ctx.font = `${settings.fontWeight} ${settings.fontSize * 0.7}px ${authorFontStack}`;
+      const authorText = settings.showPunctuation !== false 
+        ? `— ${settings.author}`
+        : settings.author;
+      ctx.fillText(authorText, textX, quoteEndY + lineHeight * 0.5);
     }
 
     // Draw watermark
@@ -197,7 +238,7 @@ export default function PosterCanvas({
       ctx.font = '400 16px sans-serif';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
       ctx.textAlign = 'right';
-      ctx.fillText('Created with aphorize', width - 20, height - 20);
+      ctx.fillText('Created with Aphorize', width - 20, height - 20);
     }
 
     // Draw attribution if photo is used
