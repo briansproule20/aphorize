@@ -1,5 +1,5 @@
 import { EchoAccount } from '@/components/echo-account-next';
-import { isSignedIn } from '@/echo';
+import Image from 'next/image';
 import type { FC } from 'react';
 
 interface HeaderProps {
@@ -11,16 +11,21 @@ const Header: FC<HeaderProps> = async ({
   title = 'My App',
   className = '',
 }) => {
-  const signedIn = await isSignedIn();
-
   return (
     <header
-      className={`border-gray-200 border-b bg-white shadow-sm ${className}`}
+      className={`border-border border-b bg-background ${className}`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <h1 className="font-semibold text-gray-900 text-xl">{title}</h1>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/aphorize-favicon.png"
+              alt="aphorize logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <h1 className="font-semibold text-foreground text-xl">{title}</h1>
           </div>
 
           <nav className="flex items-center space-x-4">
