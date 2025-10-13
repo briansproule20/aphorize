@@ -87,33 +87,12 @@ export async function POST(req: Request) {
             )
             .join('\n\n');
 
-          const responseMessage = {
-            role: 'assistant' as const,
-            content: [
-              {
-                type: 'text' as const,
-                text: `Found ${data.count} real quote(s):\n\n${quotesText}`,
-              },
-            ],
-          };
-
           // Return as a simple stream response
           const modelProvider = provider === 'openai' ? openai(model) : anthropic(model);
           const result = streamText({
             model: modelProvider,
-            messages: convertToModelMessages([
-              ...messages,
-              {
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'text',
-                    text: `Found ${data.count} real quote(s):\n\n${quotesText}`,
-                  },
-                ],
-              },
-            ]),
-            system: 'You are presenting real quotes found from a database. Display them exactly as provided.',
+            messages: convertToModelMessages(messages),
+            system: `You are presenting real quotes found from a database. Here are the ${data.count} quote(s) found:\n\n${quotesText}\n\nPresent these quotes to the user exactly as provided above.`,
           });
 
           return result.toUIMessageStreamResponse({
@@ -127,18 +106,8 @@ export async function POST(req: Request) {
           const modelProvider = provider === 'openai' ? openai(model) : anthropic(model);
           const result = streamText({
             model: modelProvider,
-            messages: convertToModelMessages([
-              ...messages,
-              {
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'text',
-                    text: 'No exact quote found. Enable AI quote generation to craft an original line for this occasion.',
-                  },
-                ],
-              },
-            ]),
+            messages: convertToModelMessages(messages),
+            system: 'No exact quote found in the database. Inform the user that no matching quotes were found and suggest they enable AI quote generation to create an original quote for this occasion.',
           });
 
           return result.toUIMessageStreamResponse({
