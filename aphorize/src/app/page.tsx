@@ -36,21 +36,21 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Hero Section */}
-      <section className="flex flex-1 flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-6xl space-y-8 text-center">
+      <section className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl space-y-6 text-center sm:space-y-8">
           {/* Headline */}
-          <div className="space-y-4">
-            <h1 className="font-bold text-4xl tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+          <div className="space-y-3 sm:space-y-4">
+            <h1 className="font-bold text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
               <span className="block bg-gradient-to-r from-[rgb(26,26,26)] to-[rgb(203,182,130)] dark:from-[rgb(245,243,239)] dark:to-[rgb(203,182,130)] bg-clip-text text-transparent">Aphorize Quotes</span>
             </h1>
-            <p className="mx-auto max-w-2xl text-muted-foreground text-lg sm:text-xl">
+            <p className="mx-auto max-w-2xl text-muted-foreground text-base sm:text-lg md:text-xl">
               Find inspiration, generate original quotes with AI, or design stunning posters
               to share your favorite words of wisdom.
             </p>
           </div>
 
           {/* CTA Cards */}
-          <div className="mx-auto grid max-w-5xl gap-6 pt-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl gap-4 pt-6 sm:gap-6 sm:grid-cols-2 sm:pt-8 lg:grid-cols-3">
             {/* Find Quotes */}
             <Link href="/find" className="group">
               <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
@@ -122,8 +122,8 @@ export default async function Home() {
           </div>
 
           {/* Secondary CTA */}
-          <div className="pt-8">
-            <p className="text-muted-foreground text-sm">
+          <div className="pt-6 sm:pt-8">
+            <p className="text-muted-foreground text-xs sm:text-sm">
               Powered by AI • Free to start • No credit card required
             </p>
           </div>
