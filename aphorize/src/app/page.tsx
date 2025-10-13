@@ -61,7 +61,7 @@ export default async function Home() {
                   <div className="space-y-2 text-left">
                     <CardTitle className="text-xl">Find Quotes</CardTitle>
                     <CardDescription className="text-muted-foreground">
-                      Search through thousands of memorable quotes from history's greatest minds
+                      Search through thousands of memorable quotes from history&apos;s greatest minds
                     </CardDescription>
                   </div>
                   <Button
