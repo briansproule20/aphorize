@@ -1,27 +1,27 @@
-import Chat from '@/app/_components/chat';
 import SignInButton from '@/app/_components/echo/sign-in-button';
 import { isSignedIn } from '@/echo';
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
   const signedIn = await isSignedIn();
 
   if (!signedIn) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br p-4 dark:from-gray-900 dark:to-gray-800">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8 text-center">
           <div>
-            <h2 className="mt-6 font-bold text-3xl text-gray-900 tracking-tight dark:text-white">
-              Echo Demo App
+            <h2 className="mt-6 font-bold text-3xl tracking-tight">
+              aphorize
             </h2>
-            <p className="mt-2 text-gray-600 text-sm dark:text-gray-400">
-              AI-powered chat with built-in billing and user management
+            <p className="mt-2 text-muted-foreground text-sm">
+              Find and create memorable quotes with AI, then turn them into beautiful posters
             </p>
           </div>
 
           <div className="space-y-4">
             <SignInButton />
 
-            <div className="text-gray-500 text-xs dark:text-gray-400">
+            <div className="text-muted-foreground text-xs">
               Secure authentication with built-in AI billing
             </div>
           </div>
@@ -30,5 +30,6 @@ export default async function Home() {
     );
   }
 
-  return <Chat />;
+  // Redirect to generate page if signed in
+  redirect('/generate');
 }

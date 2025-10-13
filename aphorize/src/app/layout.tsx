@@ -16,21 +16,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'aphorize',
-  description: 'AI-powered chat application with Echo billing integration',
+  description: 'Find and create memorable quotes with AI, then turn them into beautiful posters',
   icons: {
     icon: '/aphorize-favicon.png',
     apple: '/aphorize-favicon.png',
   },
   openGraph: {
     title: 'aphorize',
-    description: 'AI-powered chat application with Echo billing integration',
+    description: 'Find and create memorable quotes with AI, then turn them into beautiful posters',
     images: ['/aphorize-favicon.png'],
     type: 'website',
   },
   twitter: {
     card: 'summary',
     title: 'aphorize',
-    description: 'AI-powered chat application with Echo billing integration',
+    description: 'Find and create memorable quotes with AI, then turn them into beautiful posters',
     images: ['/aphorize-favicon.png'],
   },
 };
