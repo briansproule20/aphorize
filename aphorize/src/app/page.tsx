@@ -12,12 +12,11 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl space-y-6 text-center sm:space-y-8">
           {/* Headline */}
           <div className="space-y-3 sm:space-y-4">
-            <h1 className="font-bold text-4xl tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+            <h1 className="font-bold text-4xl tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="block bg-gradient-to-r from-[rgb(26,26,26)] to-[rgb(203,182,130)] dark:from-[rgb(245,243,239)] dark:to-[rgb(203,182,130)] bg-clip-text text-transparent">Aphorize Quotes</span>
             </h1>
-            <p className="mx-auto max-w-2xl text-muted-foreground text-base sm:text-lg md:text-xl">
-              Find inspiration, generate original quotes with AI, or design stunning posters
-              to share your favorite words of wisdom.
+            <p className="mx-auto text-muted-foreground text-base sm:text-lg md:text-xl md:whitespace-nowrap">
+              Search real quotes or generate AI originals, then turn them into posters or memes.
             </p>
           </div>
 
