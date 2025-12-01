@@ -94,6 +94,7 @@ export default function PosterBuilderPage() {
   const [positionOpen, setPositionOpen] = useState(true);
   const [stylingOpen, setStylingOpen] = useState(true);
   const [backgroundOpen, setBackgroundOpen] = useState(true);
+  const [previewOpen, setPreviewOpen] = useState(true);
 
   // Load pending quote from localStorage
   useEffect(() => {
@@ -508,19 +509,160 @@ export default function PosterBuilderPage() {
             </div>
           </Collapsible>
 
+          {/* Background */}
+          <Collapsible open={backgroundOpen} onOpenChange={setBackgroundOpen}>
+            <div className="rounded-lg border">
+              <CollapsibleTrigger className="flex w-full items-center justify-between p-3 hover:bg-muted/50 transition-colors md:p-4">
+                <h2 className="font-semibold text-base md:text-lg">Background</h2>
+                <ChevronDown className={`h-5 w-5 transition-transform ${backgroundOpen ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="border-t p-3 md:p-4">
+                  <Tabs value={backgroundSource} onValueChange={(v) => setBackgroundSource(v as any)} className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="ai" className="gap-2">
+                        <Wand2 className="h-4 w-4" />
+                        <span className="hidden sm:inline">AI Generate</span>
+                        <span className="sm:hidden">AI</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="color" className="gap-2">
+                        <Palette className="h-4 w-4" />
+                        <span className="hidden sm:inline">Color</span>
+                        <span className="sm:hidden">Color</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="upload" className="gap-2">
+                        <Upload className="h-4 w-4" />
+                        <span className="hidden sm:inline">Upload</span>
+                        <span className="sm:hidden">Upload</span>
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="ai" className="space-y-4 mt-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="ai-prompt">Describe your background</Label>
+                        <Textarea
+                          id="ai-prompt"
+                          placeholder="A serene mountain landscape at sunset..."
+                          value={aiPrompt}
+                          onChange={(e) => setAiPrompt(e.target.value)}
+                          rows={3}
+                          className="resize-none"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleGenerateAiBackground}
+                        disabled={!aiPrompt.trim() || generatingAi}
+                        className="w-full"
+                      >
+                        {generatingAi ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="mr-2 h-4 w-4" />
+                            Generate Background
+                          </>
+                        )}
+                      </Button>
+                    </TabsContent>
+
+                    <TabsContent value="color" className="space-y-4 mt-4">
+                      <div className="space-y-3">
+                        <Label htmlFor="bg-color">Primary Color</Label>
+                        <div className="flex items-center gap-4">
+                          <Input
+                            id="bg-color"
+                            type="color"
+                            value={tempColor1}
+                            onChange={(e) => setTempColor1(e.target.value)}
+                            className="h-10 w-16 cursor-pointer"
+                          />
+                          <span className="text-muted-foreground text-sm">
+                            {gradientEnabled ? 'Gradient Start' : 'Solid Color'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="gradient-toggle">Enable Gradient</Label>
+                        <Switch
+                          id="gradient-toggle"
+                          checked={gradientEnabled}
+                          onCheckedChange={setGradientEnabled}
+                        />
+                      </div>
+                      {gradientEnabled && (
+                        <div className="space-y-3">
+                          <Label htmlFor="gradient-color-2">Secondary Color</Label>
+                          <div className="flex items-center gap-4">
+                            <Input
+                              id="gradient-color-2"
+                              type="color"
+                              value={tempColor2}
+                              onChange={(e) => setTempColor2(e.target.value)}
+                              className="h-10 w-16 cursor-pointer"
+                            />
+                            <span className="text-muted-foreground text-sm">Gradient End</span>
+                          </div>
+                        </div>
+                      )}
+                      <Button onClick={handleApplyColors} className="w-full">
+                        <Palette className="mr-2 h-4 w-4" />
+                        Apply Background
+                      </Button>
+                    </TabsContent>
+
+                    <TabsContent value="upload" className="space-y-4 mt-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="file-upload">Upload Image</Label>
+                        <Input
+                          id="file-upload"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          className="cursor-pointer"
+                        />
+                      </div>
+                      {uploadedImage && (
+                        <div className="space-y-2">
+                          <p className="font-medium text-sm">Preview</p>
+                          <img
+                            src={uploadedImage}
+                            alt="Uploaded background"
+                            className="h-24 w-full rounded-md object-cover"
+                          />
+                        </div>
+                      )}
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
+
         </div>
 
         {/* Right Panel - Preview */}
         <div className="order-first space-y-4 lg:order-last">
-          <div className="rounded-lg border p-3 md:p-4">
-            <h2 className="mb-3 font-semibold text-base md:mb-4 md:text-lg">Preview</h2>
-            <PosterCanvas settings={settings} attribution={attribution} />
-            {!settings.quoteText && (
-              <p className="mt-4 text-center text-muted-foreground text-sm">
-                Enter a quote to see the full preview
-              </p>
-            )}
-          </div>
+          <Collapsible open={previewOpen} onOpenChange={setPreviewOpen}>
+            <div className="rounded-lg border">
+              <CollapsibleTrigger className="flex w-full items-center justify-between p-3 hover:bg-muted/50 transition-colors md:p-4">
+                <h2 className="font-semibold text-base md:text-lg">Preview</h2>
+                <ChevronDown className={`h-5 w-5 transition-transform ${previewOpen ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="border-t p-3 md:p-4">
+                  <PosterCanvas settings={settings} attribution={attribution} />
+                  {!settings.quoteText && (
+                    <p className="mt-4 text-center text-muted-foreground text-sm">
+                      Enter a quote to see the full preview
+                    </p>
+                  )}
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
 
           <Button
             onClick={() => router.push('/')}
@@ -530,185 +672,6 @@ export default function PosterBuilderPage() {
             Back to Chat
           </Button>
         </div>
-      </div>
-
-      {/* Background Options - Bottom Section */}
-      <div className="mt-6 md:mt-8">
-        <Collapsible open={backgroundOpen} onOpenChange={setBackgroundOpen}>
-          <div className="rounded-lg border">
-            <CollapsibleTrigger className="flex w-full items-center justify-between p-3 hover:bg-muted/50 transition-colors md:p-4">
-              <div className="text-left">
-                <h2 className="font-semibold text-base md:text-lg">Background</h2>
-                <p className="text-muted-foreground text-xs md:text-sm">Choose how you want to style your poster background</p>
-              </div>
-              <ChevronDown className={`h-5 w-5 transition-transform ${backgroundOpen ? 'rotate-180' : ''}`} />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="border-t p-3 md:p-4">
-                <Tabs value={backgroundSource} onValueChange={(v) => setBackgroundSource(v as any)} className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="ai" className="gap-2">
-                      <Wand2 className="h-4 w-4" />
-                      AI Generate
-                    </TabsTrigger>
-                    <TabsTrigger value="color" className="gap-2">
-                      <Palette className="h-4 w-4" />
-                      Color
-                    </TabsTrigger>
-                    <TabsTrigger value="upload" className="gap-2">
-                      <Upload className="h-4 w-4" />
-                      Upload
-                    </TabsTrigger>
-                  </TabsList>
-
-          <TabsContent value="ai" className="space-y-4">
-            <div className="rounded-lg border bg-card p-4 space-y-4 md:p-6">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Wand2 className="h-5 w-5 text-primary" />
-                  <h3 className="font-semibold text-base">AI Background Generation</h3>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  Describe your ideal background and AI will create it using Gemini 2.5 Flash
-                </p>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="ai-prompt">Prompt</Label>
-                <Textarea
-                  id="ai-prompt"
-                  placeholder="A serene mountain landscape at sunset..."
-                  value={aiPrompt}
-                  onChange={(e) => setAiPrompt(e.target.value)}
-                  rows={3}
-                  className="resize-none"
-                />
-              </div>
-
-              <Button
-                onClick={handleGenerateAiBackground}
-                disabled={!aiPrompt.trim() || generatingAi}
-                className="w-full"
-              >
-                {generatingAi ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="mr-2 h-4 w-4" />
-                    Generate Background
-                  </>
-                )}
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="color" className="space-y-4">
-            <div className="rounded-lg border bg-card p-4 space-y-6 md:p-6">
-              <div className="space-y-3">
-                <Label htmlFor="bg-color">Primary Color</Label>
-                <div className="flex items-center gap-4">
-                  <Input
-                    id="bg-color"
-                    type="color"
-                    value={tempColor1}
-                    onChange={(e) => setTempColor1(e.target.value)}
-                    className="h-12 w-20 cursor-pointer"
-                  />
-                  <div className="flex-1 space-y-0.5">
-                    <p className="font-medium text-sm">
-                      {gradientEnabled ? 'Gradient Start' : 'Background Color'}
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      {gradientEnabled ? 'First color of the gradient' : 'Solid color background'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="gradient-toggle">Gradient</Label>
-                    <p className="text-muted-foreground text-xs">Enable gradient effect</p>
-                  </div>
-                  <Switch
-                    id="gradient-toggle"
-                    checked={gradientEnabled}
-                    onCheckedChange={setGradientEnabled}
-                  />
-                </div>
-
-                {gradientEnabled && (
-                  <div className="space-y-3 rounded-md border bg-muted/50 p-4">
-                    <Label htmlFor="gradient-color-2">Secondary Color</Label>
-                    <div className="flex items-center gap-4">
-                      <Input
-                        id="gradient-color-2"
-                        type="color"
-                        value={tempColor2}
-                        onChange={(e) => setTempColor2(e.target.value)}
-                        className="h-12 w-20 cursor-pointer"
-                      />
-                      <div className="flex-1 space-y-0.5">
-                        <p className="font-medium text-sm">Gradient End</p>
-                        <p className="text-muted-foreground text-xs">Second color of the gradient</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <Separator />
-
-              <Button
-                onClick={handleApplyColors}
-                className="w-full"
-              >
-                <Palette className="mr-2 h-4 w-4" />
-                Apply Background
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="upload" className="space-y-4">
-            <div className="rounded-lg border bg-card p-4 space-y-4 md:p-6">
-              <div className="space-y-2">
-                <Label htmlFor="file-upload">Image File</Label>
-                <p className="text-muted-foreground text-sm">
-                  Upload an image to use as your poster background
-                </p>
-              </div>
-
-              <Input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="cursor-pointer"
-              />
-
-              {uploadedImage && (
-                <div className="space-y-2 rounded-md border bg-muted/50 p-3">
-                  <p className="font-medium text-sm">Preview</p>
-                  <img
-                    src={uploadedImage}
-                    alt="Uploaded background"
-                    className="h-32 w-full rounded-md object-cover"
-                  />
-                </div>
-              )}
-            </div>
-          </TabsContent>
-                </Tabs>
-              </div>
-            </CollapsibleContent>
-          </div>
-        </Collapsible>
       </div>
     </div>
   );
