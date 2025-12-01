@@ -95,7 +95,7 @@ export default function Home() {
           {/* Secondary CTA */}
           <div className="pt-6 sm:pt-8">
             <p className="text-muted-foreground text-xs sm:text-sm">
-              Powered by Merit System&apos;s Echo and Vercel
+              Powered by <a href="https://echo.merit.systems/dashboard" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">Merit System&apos;s Echo</a>
             </p>
           </div>
         </div>
