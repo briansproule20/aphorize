@@ -93,6 +93,7 @@ export default function PosterBuilderPage() {
   const [fontSettingsOpen, setFontSettingsOpen] = useState(true);
   const [positionOpen, setPositionOpen] = useState(true);
   const [stylingOpen, setStylingOpen] = useState(true);
+  const [backgroundOpen, setBackgroundOpen] = useState(true);
 
   // Load pending quote from localStorage
   useEffect(() => {
@@ -533,26 +534,32 @@ export default function PosterBuilderPage() {
 
       {/* Background Options - Bottom Section */}
       <div className="mt-6 md:mt-8">
-        <div className="mb-3 md:mb-4">
-          <h2 className="font-semibold text-xl md:text-2xl">Background</h2>
-          <p className="text-muted-foreground text-xs md:text-sm">Choose how you want to style your poster background</p>
-        </div>
-
-        <Tabs value={backgroundSource} onValueChange={(v) => setBackgroundSource(v as any)} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="ai" className="gap-2">
-              <Wand2 className="h-4 w-4" />
-              AI Generate
-            </TabsTrigger>
-            <TabsTrigger value="color" className="gap-2">
-              <Palette className="h-4 w-4" />
-              Color
-            </TabsTrigger>
-            <TabsTrigger value="upload" className="gap-2">
-              <Upload className="h-4 w-4" />
-              Upload
-            </TabsTrigger>
-          </TabsList>
+        <Collapsible open={backgroundOpen} onOpenChange={setBackgroundOpen}>
+          <div className="rounded-lg border">
+            <CollapsibleTrigger className="flex w-full items-center justify-between p-3 hover:bg-muted/50 transition-colors md:p-4">
+              <div className="text-left">
+                <h2 className="font-semibold text-base md:text-lg">Background</h2>
+                <p className="text-muted-foreground text-xs md:text-sm">Choose how you want to style your poster background</p>
+              </div>
+              <ChevronDown className={`h-5 w-5 transition-transform ${backgroundOpen ? 'rotate-180' : ''}`} />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="border-t p-3 md:p-4">
+                <Tabs value={backgroundSource} onValueChange={(v) => setBackgroundSource(v as any)} className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="ai" className="gap-2">
+                      <Wand2 className="h-4 w-4" />
+                      AI Generate
+                    </TabsTrigger>
+                    <TabsTrigger value="color" className="gap-2">
+                      <Palette className="h-4 w-4" />
+                      Color
+                    </TabsTrigger>
+                    <TabsTrigger value="upload" className="gap-2">
+                      <Upload className="h-4 w-4" />
+                      Upload
+                    </TabsTrigger>
+                  </TabsList>
 
           <TabsContent value="ai" className="space-y-4">
             <div className="rounded-lg border bg-card p-4 space-y-4 md:p-6">
@@ -697,7 +704,11 @@ export default function PosterBuilderPage() {
               )}
             </div>
           </TabsContent>
-        </Tabs>
+                </Tabs>
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
       </div>
     </div>
   );
