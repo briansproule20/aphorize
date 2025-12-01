@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { DotBackground } from '@/components/ui/dot-background';
 import { MessageSquare, Sparkles, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <DotBackground className="flex min-h-screen flex-col">
       {/* Hero Section */}
       <section className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto w-full max-w-6xl space-y-6 text-center sm:space-y-8">
@@ -100,6 +101,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>
+    </DotBackground>
   );
 }
