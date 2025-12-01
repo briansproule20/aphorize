@@ -2,9 +2,8 @@
 
 import { useChat } from '@ai-sdk/react';
 import { useEcho } from '@merit-systems/echo-next-sdk/client';
-import { CopyIcon, MessageSquare, ImageIcon } from 'lucide-react';
+import { CopyIcon, MessageSquare } from 'lucide-react';
 import { Fragment, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import SignInButton from '@/app/_components/echo/sign-in-button';
 import { Action, Actions } from '@/components/ai-elements/actions';
 import {
@@ -95,7 +94,6 @@ const lengths = [
 ];
 
 export default function GenerateQuotePage() {
-  const router = useRouter();
   const { user, isLoading } = useEcho();
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(models[0].value);
@@ -160,11 +158,6 @@ export default function GenerateQuotePage() {
     if (audience) prompt += ` for ${audience}`;
     if (length) prompt += ` (${lengths.find((l) => l.value === length)?.label || length})`;
     return prompt;
-  };
-
-  const handlePosterize = (quoteText: string) => {
-    localStorage.setItem('pendingQuote', quoteText);
-    router.push('/poster');
   };
 
   return (
@@ -270,12 +263,6 @@ export default function GenerateQuotePage() {
                                   label="Copy"
                                 >
                                   <CopyIcon className="size-3" />
-                                </Action>
-                                <Action
-                                  onClick={() => handlePosterize(part.text)}
-                                  label="Posterize"
-                                >
-                                  <ImageIcon className="size-3" />
                                 </Action>
                               </Actions>
                             )}
