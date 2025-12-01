@@ -1,9 +1,11 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
+import { useEcho } from '@merit-systems/echo-next-sdk/client';
 import { CopyIcon, MessageSquare, ImageIcon } from 'lucide-react';
 import { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import SignInButton from '@/app/_components/echo/sign-in-button';
 import { Action, Actions } from '@/components/ai-elements/actions';
 import {
   Conversation,
@@ -66,6 +68,7 @@ const models = [
 
 export default function FindQuotePage() {
   const router = useRouter();
+  const { user, isLoading } = useEcho();
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(models[0].value);
   const [provider, setProvider] = useState<string>(models[0].provider);
@@ -76,6 +79,29 @@ export default function FindQuotePage() {
   const [searchTags, setSearchTags] = useState('');
 
   const { messages, sendMessage, status } = useChat();
+
+  if (!isLoading && !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8 text-center">
+          <div>
+            <h2 className="mt-6 font-bold text-3xl tracking-tight">
+              Find Quotes
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm">
+              Sign in to search through thousands of memorable quotes
+            </p>
+          </div>
+          <div className="space-y-4">
+            <SignInButton />
+            <p className="text-muted-foreground text-xs">
+              Secure authentication with built-in AI billing
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

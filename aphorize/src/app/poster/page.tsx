@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEcho } from '@merit-systems/echo-next-sdk/client';
+import SignInButton from '@/app/_components/echo/sign-in-button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -54,6 +56,7 @@ const textAligns = [
 
 export default function PosterBuilderPage() {
   const router = useRouter();
+  const { user, isLoading } = useEcho();
   const [settings, setSettings] = useState<PosterSettings>({
     quoteText: '',
     author: '',
@@ -172,6 +175,29 @@ export default function PosterBuilderPage() {
       setGeneratingAi(false);
     }
   };
+
+  if (!isLoading && !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8 text-center">
+          <div>
+            <h2 className="mt-6 font-bold text-3xl tracking-tight">
+              Poster Builder
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm">
+              Sign in to create beautiful quote posters with AI backgrounds
+            </p>
+          </div>
+          <div className="space-y-4">
+            <SignInButton />
+            <p className="text-muted-foreground text-xs">
+              Secure authentication with built-in AI billing
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-7xl p-4 md:p-6">
