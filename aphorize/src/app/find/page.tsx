@@ -2,8 +2,9 @@
 
 import { useChat } from '@ai-sdk/react';
 import { useEcho } from '@merit-systems/echo-next-sdk/client';
-import { CopyIcon, MessageSquare } from 'lucide-react';
+import { CopyIcon, CheckIcon, MessageSquare } from 'lucide-react';
 import { Fragment, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import SignInButton from '@/app/_components/echo/sign-in-button';
 import { Action, Actions } from '@/components/ai-elements/actions';
 import {
@@ -70,6 +71,7 @@ export default function FindQuotePage() {
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(models[0].value);
   const [provider, setProvider] = useState<string>(models[0].provider);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Search parameters
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,6 +79,12 @@ export default function FindQuotePage() {
   const [searchTags, setSearchTags] = useState('');
 
   const { messages, sendMessage, status } = useChat();
+
+  const handleCopy = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   if (!isLoading && !user) {
     return (
@@ -213,10 +221,32 @@ export default function FindQuotePage() {
                             {message.role === 'assistant' && (
                               <Actions className="mt-2">
                                 <Action
-                                  onClick={() => navigator.clipboard.writeText(part.text)}
-                                  label="Copy"
+                                  onClick={() => handleCopy(part.text, `${message.id}-${i}`)}
+                                  label={copiedId === `${message.id}-${i}` ? 'Copied!' : 'Copy'}
                                 >
-                                  <CopyIcon className="size-3" />
+                                  <AnimatePresence mode="wait" initial={false}>
+                                    {copiedId === `${message.id}-${i}` ? (
+                                      <motion.div
+                                        key="check"
+                                        initial={{ scale: 0, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0, opacity: 0 }}
+                                        transition={{ duration: 0.15 }}
+                                      >
+                                        <CheckIcon className="size-3 text-green-500" />
+                                      </motion.div>
+                                    ) : (
+                                      <motion.div
+                                        key="copy"
+                                        initial={{ scale: 0, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0, opacity: 0 }}
+                                        transition={{ duration: 0.15 }}
+                                      >
+                                        <CopyIcon className="size-3" />
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
                                 </Action>
                               </Actions>
                             )}
