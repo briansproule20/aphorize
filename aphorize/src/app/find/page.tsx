@@ -109,29 +109,35 @@ export default function FindQuotePage() {
     );
   }
 
+  const hasSearchCriteria = searchQuery.trim() || searchAuthor.trim() || searchTags.trim() || input.trim();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!hasSearchCriteria) return;
+
     const messageText = input.trim() || generatePromptFromSettings();
 
-    if (messageText || searchQuery.trim()) {
-      const body: any = {
-        model: model,
-        provider: provider,
-        mode: 'search',
-        query: searchQuery,
-        author: searchAuthor,
-        tags: searchTags.split(',').map((t) => t.trim()).filter(Boolean),
-        allowAiQuote: true,
-      };
+    const body: any = {
+      model: model,
+      provider: provider,
+      mode: 'search',
+      query: searchQuery,
+      author: searchAuthor,
+      tags: searchTags.split(',').map((t) => t.trim()).filter(Boolean),
+      allowAiQuote: true,
+    };
 
-      sendMessage({ text: messageText || generatePromptFromSettings() }, { body });
-      setInput('');
-    }
+    sendMessage({ text: messageText }, { body });
+    setInput('');
   };
 
   const generatePromptFromSettings = () => {
-    return `Find quotes about: ${searchQuery}${searchAuthor ? ` by ${searchAuthor}` : ''}`;
+    const parts = [];
+    if (searchQuery.trim()) parts.push(`about "${searchQuery}"`);
+    if (searchAuthor.trim()) parts.push(`by ${searchAuthor}`);
+    if (searchTags.trim()) parts.push(`tagged: ${searchTags}`);
+    return `Find quotes ${parts.join(', ')}`;
   };
 
   return (
@@ -310,7 +316,7 @@ export default function FindQuotePage() {
                 </PromptInputModelSelectContent>
               </PromptInputModelSelect>
             </PromptInputTools>
-            <PromptInputSubmit disabled={!searchQuery.trim()} status={status} />
+            <PromptInputSubmit disabled={!hasSearchCriteria} status={status} />
           </PromptInputToolbar>
         </PromptInput>
       </div>
