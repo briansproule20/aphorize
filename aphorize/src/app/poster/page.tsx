@@ -78,7 +78,7 @@ export default function PosterBuilderPage() {
     backgroundColor: '#1A1A1A',
   });
 
-  const [backgroundSource, setBackgroundSource] = useState<'upload' | 'color' | 'ai'>('color');
+  const [backgroundSource, setBackgroundSource] = useState<'upload' | 'color' | 'ai'>('ai');
   const [attribution, setAttribution] = useState<{ photographer: string; url: string }>();
   const [uploadedImage, setUploadedImage] = useState<string>();
   const [aiPrompt, setAiPrompt] = useState('');
